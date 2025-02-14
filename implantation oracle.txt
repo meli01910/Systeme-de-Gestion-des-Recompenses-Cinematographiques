@@ -1,0 +1,52 @@
+-- Création des séquences pour les ID des tables Film, Individu, Recompense et Ceremonie
+CREATE SEQUENCE film_id_seq START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE individu_id_seq START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE recompense_id_seq START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE ceremonie_id_seq START WITH 1 INCREMENT BY 1;
+
+-- Création de la table Film
+CREATE TABLE P02_Film (
+    film_id Integer  DEFAULT film_id_seq.nextval PRIMARY KEY,
+    film_nom VARCHAR(100) NOT NULL,
+    film_annee NUMBER NOT NULL
+);
+-- Création de la table Individu
+CREATE TABLE P02_Individu (
+    individu_id Integer DEFAULT individu_id_seq.NEXTVAL PRIMARY KEY,
+    individu_nom VARCHAR(30) NOT NULL,
+    individu_prenom VARCHAR(30) NOT NULL,
+    individu_nationalite VARCHAR2(30),
+    individu_naissance DATE
+);
+
+-- Création de la table Ceremonie
+CREATE TABLE P02_Ceremonie (
+    ceremonie_id integer DEFAULT ceremonie_id_seq.NEXTVAL PRIMARY KEY,
+    ceremonie_nom VARCHAR(100) NOT NULL,
+    ceremonie_pays VARCHAR(30),
+    ceremonie_types VARCHAR(30) NOT NULL CHECK (ceremonie_types IN ('Festival', 'Annuelle')),
+    ceremonie_description VARCHAR2(255),
+    ceremonie_annee_creation NUMBER
+);
+
+-- Création de la table Recompense
+CREATE TABLE P02_Recompense (
+    recompense_id integer DEFAULT recompense_id_seq.NEXTVAL PRIMARY KEY,
+    recompense_nom VARCHAR(100) NOT NULL,
+    ceremonie_id integer NOT NULL,
+    FOREIGN KEY (ceremonie_id) REFERENCES P02_Ceremonie(ceremonie_id)
+);
+
+-- Création de la table Nomination
+CREATE TABLE P02_Nomination (
+    recompense_id integer,
+    film_id integer,
+    individu_id integer,
+    annee_remise NUMBER NOT NULL,
+    statut VARCHAR2(8) NOT NULL CHECK (statut IN ('nomme', 'gagnant')),
+    PRIMARY KEY (recompense_id, film_id, individu_id),
+    FOREIGN KEY (recompense_id) REFERENCES P02_Recompense(recompense_id),
+    FOREIGN KEY (film_id) REFERENCES P02_Film(film_id),
+    FOREIGN KEY (individu_id) REFERENCES P02_Individu(individu_id)
+);
+

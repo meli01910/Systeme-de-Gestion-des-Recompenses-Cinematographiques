@@ -1,0 +1,41 @@
+/*creation de la table P02_film*/
+create  table  P02_film(film_id int auto_increment primary key ,
+                       film_nom varchar(100) not null,
+                        film_annee int not null
+                       );
+/*creation de la table P02_individu*/
+create  table P02_individu(
+			            individu_id int auto_increment  primary key ,
+                        individu_nom varchar(30) not null ,
+                        individu_prenom varchar(30) not null ,
+                        individu_nationalite varchar(30) ,
+                        individu_naissance date not null );
+
+/*creation de la table P02_ceremonie*/
+
+create  table P02_ceremonie(ceremonie_id int auto_increment  primary key,
+                            ceremonie_nom varchar(100) not null ,
+			                ceremonie_pays VARCHAR(30),
+                            ceremonie_type varchar(30) not null check ( ceremonie_type in ('festival','annuelle') ),
+                            ceremonie_description varchar(255),
+			    ceremonie_annee_creation int  );
+
+/*creation de la table P02_recompense*/
+
+create  table P02_recompense(recompense_id int auto_increment  primary key ,
+                            recompense_nom varchar(100) not null ,
+                            ceremonie_id int not null,
+                            foreign key (ceremonie_id) references P02_ceremonie(ceremonie_id) );
+
+/*creation de la table P02_nomination*/
+
+create  table  P02_nomination(
+                            film_id int not null ,
+                            individu_id int not null ,
+                            recompense_id int not null,
+			                annee_remise int not null,
+                            statut varchar(8) not null check ( statut in ('nomme','gagnant')),
+                            foreign key (film_id) references P02_film(film_id)  ,
+                            foreign key (individu_id) references P02_individu(individu_id) ,
+                            foreign key (recompense_id) references P02_recompense(recompense_id)
+                            );
